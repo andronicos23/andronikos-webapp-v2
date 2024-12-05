@@ -1,0 +1,35 @@
+.paginationButton {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.paginationButton:hover {
+  background-color: #3f4f90;
+}
+
+.searchContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000; /* Ensures it stays on top of other content */
+}
+
+.searchContainer label {
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+.searchContainer select {
+  padding: 5px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}

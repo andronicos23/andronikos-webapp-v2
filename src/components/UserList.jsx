@@ -1,6 +1,7 @@
 import UserCards from "./UserCards";
 import { useUsers } from "../context/UsersContext";
 import { useEffect, useState } from "react";
+import styles from "./UserList.module.css";
 
 function UserList() {
   const {
@@ -49,15 +50,17 @@ function Pagination({ currentPage, totalPages, setPage }) {
   return (
     <div className="pagination">
       <button
+        className={styles.paginationButton}
         onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
         disabled={currentPage === 1}
       >
         Previous
       </button>
       <span>
-        Page {currentPage} of {totalPages}
+        &nbsp;Page {currentPage} of {totalPages}&nbsp;
       </span>
       <button
+        className={styles.paginationButton}
         onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
         disabled={currentPage === totalPages}
       >
@@ -69,7 +72,7 @@ function Pagination({ currentPage, totalPages, setPage }) {
 
 function Search({ setNationality, nationalities }) {
   return (
-    <>
+    <div className={styles.searchContainer}>
       <label> Filter by Nationality: </label>
 
       <select
@@ -84,7 +87,7 @@ function Search({ setNationality, nationalities }) {
           </option>
         ))}
       </select>
-    </>
+    </div>
   );
 }
 
