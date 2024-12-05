@@ -4,17 +4,20 @@ import UserDetails from "./components/UserDetails";
 
 import UserList from "./components/UserList";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { UsersProvider } from "./context/UsersContext";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route index element={<UserList />} />
-        <Route path="user-details/:id" element={<UserDetails />} />
+    <UsersProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route index element={<UserList />} />
+          <Route path="user-details/:id" element={<UserDetails />} />
 
-        <Route path="*" element={<PageNotFound />} />
-      </Routes>
-    </BrowserRouter>
+          <Route path="*" element={<PageNotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </UsersProvider>
   );
 }
 

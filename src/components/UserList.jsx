@@ -1,55 +1,27 @@
-import { useEffect, useState } from "react";
 import UserCards from "./UserCards";
+import { useUsers } from "../context/UsersContext";
+import { useEffect, useState } from "react";
 
 function UserList() {
-  const [users, setUsers] = useState([]);
-  const [usersList, setUsersList] = useState([]);
-  const [nationalities, setNationalities] = useState([]);
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  // const [selectedID, setSelectedID] = useState(null);
+  const {
+    users,
+    nationalities,
+    error,
+    isLoading,
 
-  // function handleSelectedUser(id) {
-  //   id === selectedID ? setSelectedID(null) : setSelectedID(id);
-  // }
+    totalPages,
+    page,
+    setPage,
+  } = useUsers();
+  const [filteredUsers, setFilteredUsers] = useState(users);
 
-  useEffect(function () {
-    async function fetchUsers() {
-      try {
-        setIsLoading(true);
-        setError("");
-
-        const res = await fetch(`https://randomuser.me/api/?results=20`);
-
-        if (!res.ok) throw new Error("Opps ! something went wrong");
-
-        const data = await res.json();
-        console.log(data);
-
-        if (data.Response === "False")
-          throw new Error("Opps ! users not found");
-
-        setUsers(data.results);
-        setUsersList(data.results);
-        let nationalities = new Map();
-        data.results.forEach((u) => {
-          nationalities.set(u.nat, u.nat);
-        });
-        console.log(nationalities);
-        setNationalities(Array.from(nationalities.keys()));
-      } catch (err) {
-        // console.error(err.message);
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    fetchUsers();
-  }, []);
+  useEffect(() => {
+    setFilteredUsers(users);
+  }, [users, page]);
 
   const setNationality = (nationality) => {
     console.log(nationality);
-    setUsersList(
+    setFilteredUsers(
       nationality ? users.filter((u) => u.nat === nationality) : users
     );
   };
@@ -58,9 +30,40 @@ function UserList() {
     <Main>
       <Search setNationality={setNationality} nationalities={nationalities} />
       {isLoading && <Loader />}
-      {!isLoading && !error && <UserCards users={usersList} />}
+      {!isLoading && !error && (
+        <>
+          <UserCards users={filteredUsers} />
+          <Pagination
+            currentPage={page}
+            totalPages={totalPages}
+            setPage={setPage}
+          />
+        </>
+      )}
       {error && <ErrorMessage message={error} />}
     </Main>
+  );
+}
+
+function Pagination({ currentPage, totalPages, setPage }) {
+  return (
+    <div className="pagination">
+      <button
+        onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+        disabled={currentPage === 1}
+      >
+        Previous
+      </button>
+      <span>
+        Page {currentPage} of {totalPages}
+      </span>
+      <button
+        onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+        disabled={currentPage === totalPages}
+      >
+        Next
+      </button>
+    </div>
   );
 }
 

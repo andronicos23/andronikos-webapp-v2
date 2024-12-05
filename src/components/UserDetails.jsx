@@ -1,45 +1,31 @@
-import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useUsers } from "../context/UsersContext";
 
 //BUUUUUUUUGGGGGGGGGGGGGGGGG
 //ideally context API or redux in order to manage global state of users , calling this API again produces wrong results , i realized this way too late !!!!
 
 function UserDetails() {
-  const navigate = useNavigate();
-  const [user, setUser] = useState({});
+  const { users } = useUsers();
   const params = useParams();
-  console.log(params);
-  useEffect(function () {
-    async function fetchUser() {
-      try {
-        const res = await fetch(`https://randomuser.me/api/?id=${params.id}`);
+  const navigate = useNavigate();
+  //console.log(params);
+  const user = users.filter((user) => user.id.value === params.id);
 
-        if (!res.ok) throw new Error("Opps ! something went wrong");
+  //console.log(users);
 
-        const data = await res.json();
-        console.log(data);
-
-        if (data.Response === "False")
-          throw new Error("Opps ! users not found");
-
-        setUser(data.results[0]);
-      } catch (err) {
-        throw new Error("user not found");
-      }
-    }
-    fetchUser();
-  }, []);
+  console.log(user);
 
   return (
     <>
       <div>
         <p>
-          hello - {user?.name?.title} {user?.name?.first} {user?.name?.last}
+          hello - {user[0].name?.title} {user[0].name?.first}{" "}
+          {user[0].name?.last}
         </p>
-        <img src={user.picture?.thumbnail} alt="Avatar"></img>
-        <p>From : {user.location?.country}</p>
-        <p>Age : {user.dob?.age}</p>
-        <p>Phone : {user.phone}</p>
+        <img src={user[0].picture?.thumbnail} alt="Avatar"></img>
+        <p>From : {user[0].location?.country}</p>
+        <p>Age : {user[0].dob?.age}</p>
+        <p>Phone : {user[0].phone}</p>
       </div>
       <button
         type={"back"}
